@@ -18,7 +18,7 @@ export type Player = {
   name: string;
   hand: Tile[];
   openedGroups: TileGroup[];
-  hasOpened: boolean;  // 121 puan yapıp yere açtı mı?
+  hasOpened: boolean;  // OPENING_THRESHOLD puan yapıp yere açtı mı?
   score: number;
 };
 

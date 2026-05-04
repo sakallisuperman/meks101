@@ -1,8 +1,9 @@
 import type { Color, Tile } from '../types/game';
+import { FAKE_JOKER_COUNT } from './constants';
 
 const COLORS: Color[] = ['red', 'blue', 'black', 'yellow'];
 
-// 106 taşlık tam Türk okey takımı oluşturur
+// TOTAL_DECK_SIZE taşlık tam Türk okey takımı oluşturur
 export function createFullDeck(): Tile[] {
   const tiles: Tile[] = [];
 
@@ -20,9 +21,10 @@ export function createFullDeck(): Tile[] {
     }
   }
 
-  // 2 sahte okey taşı
-  tiles.push({ id: 'fake-joker-0', color: 'red', number: 0, isFakeJoker: true });
-  tiles.push({ id: 'fake-joker-1', color: 'red', number: 0, isFakeJoker: true });
+  // FAKE_JOKER_COUNT adet sahte okey taşı
+  for (let i = 0; i < FAKE_JOKER_COUNT; i++) {
+    tiles.push({ id: `fake-joker-${i}`, color: 'red', number: 0, isFakeJoker: true });
+  }
 
   return tiles;
 }

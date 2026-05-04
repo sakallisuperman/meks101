@@ -2,6 +2,7 @@ import type { GameState, Player, TileGroup } from '../types/game';
 import { createFullDeck, shuffle } from './deck';
 import { dealTiles } from './deal';
 import { canOpen, canFinish } from './rules';
+import { PLAYER_COUNT } from './constants';
 
 // Yeni bir oyun durumu oluşturur ve taşları dağıtır
 export function createGame(playerNames: [string, string, string]): GameState {
@@ -66,8 +67,8 @@ export function discardTile(state: GameState, tileId: string): GameState {
     i === playerIndex ? { ...p, hand: newHand } : p
   ) as unknown as [Player, Player, Player];
 
-  // Sırayı bir sonraki oyuncuya ver
-  const nextIndex = ((playerIndex + 1) % 3) as 0 | 1 | 2;
+  // Sırayı bir sonraki oyuncuya geçir (PLAYER_COUNT modülü)
+  const nextIndex = ((playerIndex + 1) % PLAYER_COUNT) as 0 | 1 | 2;
 
   return {
     ...state,
@@ -78,7 +79,7 @@ export function discardTile(state: GameState, tileId: string): GameState {
   };
 }
 
-// Oyuncu elindeki grupları yere açar (121 kontrolü dahil)
+// Oyuncu elindeki grupları yere açar (OPENING_THRESHOLD kontrolü dahil)
 export function openGroups(
   state: GameState,
   playerId: string,

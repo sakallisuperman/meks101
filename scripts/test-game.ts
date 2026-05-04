@@ -1,5 +1,10 @@
 import { createGame } from '../lib/engine/game';
 import { isPer, isSeri, isValidGroup } from '../lib/engine/groups';
+import {
+  TILES_PER_PLAYER,
+  STARTING_PLAYER_BONUS,
+  DRAW_PILE_SIZE,
+} from '../lib/engine/constants';
 import type { Color, Tile, TileGroup } from '../lib/types/game';
 
 // Renk → emoji eşleşmesi
@@ -58,7 +63,29 @@ for (const player of state.players) {
   printHand(player.name, player.hand);
 }
 
-// ── GRUP TESTLERİ ────────────────────────────────────────────
+// ── DAĞITIM TESTLERİ ─────────────────────────────────────────
+console.log('\n── Dağıtım Testleri ───────────────────');
+
+const startingCount = TILES_PER_PLAYER + STARTING_PLAYER_BONUS;
+
+test(
+  `Başlayan oyuncu ${startingCount} taş aldı`,
+  state.players[0].hand.length === startingCount
+);
+test(
+  `2. oyuncu ${TILES_PER_PLAYER} taş aldı`,
+  state.players[1].hand.length === TILES_PER_PLAYER
+);
+test(
+  `3. oyuncu ${TILES_PER_PLAYER} taş aldı`,
+  state.players[2].hand.length === TILES_PER_PLAYER
+);
+test(
+  `Çekme destesinde ${DRAW_PILE_SIZE} taş kaldı`,
+  state.deck.length === DRAW_PILE_SIZE
+);
+
+// ── PER / SERİ TESTLERİ ───────────────────────────────────────
 console.log('\n── Per / Seri Testleri ────────────────');
 
 // Per testleri
