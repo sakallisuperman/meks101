@@ -1,7 +1,6 @@
-import type { GameState, Player, Tile, TileGroup } from '../types/game';
+import type { GameState, Player, TileGroup } from '../types/game';
 import { createFullDeck, shuffle } from './deck';
 import { dealTiles } from './deal';
-import { isValidGroup } from './groups';
 import { canOpen, canFinish } from './rules';
 
 // Yeni bir oyun durumu oluşturur ve taşları dağıtır
@@ -9,14 +8,14 @@ export function createGame(playerNames: [string, string, string]): GameState {
   const deck = shuffle(createFullDeck());
   const { hands, indicatorTile, okeyTile, remainingDeck } = dealTiles(deck);
 
-  const players: [Player, Player, Player] = playerNames.map((name, i) => ({
+  const players = playerNames.map((name, i) => ({
     id: `player-${i}`,
     name,
     hand: hands[i],
-    openedGroups: [],
+    openedGroups: [] as TileGroup[],
     hasOpened: false,
     score: 0,
-  })) as [Player, Player, Player];
+  })) as unknown as [Player, Player, Player];
 
   return {
     players,
@@ -42,7 +41,7 @@ export function drawTile(state: GameState): GameState {
 
   const updatedPlayers = state.players.map((p, i) =>
     i === playerIndex ? { ...p, hand: [...p.hand, drawn] } : p
-  ) as [Player, Player, Player];
+  ) as unknown as [Player, Player, Player];
 
   return {
     ...state,
@@ -65,7 +64,7 @@ export function discardTile(state: GameState, tileId: string): GameState {
 
   const updatedPlayers = state.players.map((p, i) =>
     i === playerIndex ? { ...p, hand: newHand } : p
-  ) as [Player, Player, Player];
+  ) as unknown as [Player, Player, Player];
 
   // Sırayı bir sonraki oyuncuya ver
   const nextIndex = ((playerIndex + 1) % 3) as 0 | 1 | 2;
@@ -105,7 +104,7 @@ export function openGroups(
 
   const updatedPlayers = state.players.map((p, i) =>
     i === playerIndex ? updatedPlayer : p
-  ) as [Player, Player, Player];
+  ) as unknown as [Player, Player, Player];
 
   return { ...state, players: updatedPlayers };
 }
@@ -121,7 +120,7 @@ export function finishGame(state: GameState, playerId: string): GameState {
   // Kazanan oyuncuya puan ekle (basit MVP: 101 puan)
   const updatedPlayers = state.players.map((p, i) =>
     i === playerIndex ? { ...p, score: p.score + 101 } : p
-  ) as [Player, Player, Player];
+  ) as unknown as [Player, Player, Player];
 
   return {
     ...state,

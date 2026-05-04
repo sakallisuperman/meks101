@@ -1,9 +1,4 @@
-import type { Tile, TileGroup } from '../types/game';
-
-// Okey taşları (sahte joker dahil) per/seri kontrolünde joker gibi davranır
-function isOkeyTile(tile: Tile, okeyNumber: number): boolean {
-  return tile.isFakeJoker || tile.number === okeyNumber;
-}
+import type { TileGroup } from '../types/game';
 
 // Per: 3-4 taş, hepsinin numarası aynı, hepsinin rengi farklı
 export function isPer(tiles: TileGroup): boolean {
