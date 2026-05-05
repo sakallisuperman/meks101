@@ -1,23 +1,28 @@
 'use client';
 
+import { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { createGame } from '@/lib/engine/game';
 import Table from './Table';
-import Tile from './Tile';
-
-// Test taşları: 5 farklı renk ve sayı, masanın ortasında bir sıra
-const TEST_TILES = [
-  { position: [-0.8, 0.05, 0] as [number, number, number], number: 1,  color: 'red'    as const },
-  { position: [-0.4, 0.05, 0] as [number, number, number], number: 5,  color: 'blue'   as const },
-  { position: [ 0.0, 0.05, 0] as [number, number, number], number: 7,  color: 'black'  as const },
-  { position: [ 0.4, 0.05, 0] as [number, number, number], number: 10, color: 'yellow' as const },
-  { position: [ 0.8, 0.05, 0] as [number, number, number], number: 13, color: 'red'    as const },
-];
+import PlayerHand from './PlayerHand';
+import PlayerSeat from './PlayerSeat';
 
 export default function Scene() {
+  // Oyun başlangıç durumunu bir kez oluştur (lazy initializer)
+  const [gameState] = useState(() => createGame(['Sen', 'Ayşe', 'Mehmet']));
+
+  // Geliştirme için taş sayılarını logla
+  console.log('Oyun durumu:', gameState);
+  console.log('Senin elin:', gameState.players[0].hand.length, 'taş');
+  console.log('Ayşe:', gameState.players[1].hand.length, 'taş');
+  console.log('Mehmet:', gameState.players[2].hand.length, 'taş');
+
   return (
-    // Canvas kendiliğinden parent boyutunu doldurur
-    <Canvas camera={{ position: [0, 3, 4], fov: 50 }}>
+    <Canvas camera={{ position: [0, 2.2, 2.2], fov: 45 }}>
+      {/* Kamera — makeDefault ile varsayılan kamera olarak ayarla */}
+      <PerspectiveCamera makeDefault position={[0, 2.2, 2.2]} fov={45} />
+
       {/* Genel ortam ışığı */}
       <ambientLight intensity={0.4} />
 
@@ -30,17 +35,31 @@ export default function Scene() {
 
       <Table />
 
-      {TEST_TILES.map((tile, i) => (
-        <Tile
-          key={i}
-          position={tile.position}
-          number={tile.number}
-          color={tile.color}
-        />
-      ))}
+      {/* Oyuncunun eli — ön taraf, kameraya yakın */}
+      <PlayerHand
+        tiles={gameState.players[0].hand}
+        position={[0, 0, 0.9]}
+        rotation={[0, 0, 0]}
+      />
 
-      {/* Geliştirme aşamasında sahneyi fareyle döndürmek için */}
-      <OrbitControls />
+      {/* Ayşe — sol taraf */}
+      <PlayerSeat
+        name="Ayşe"
+        tileCount={gameState.players[1].hand.length}
+        position={[-1.5, 0, 0]}
+        rotation={[0, Math.PI / 2, 0]}
+      />
+
+      {/* Mehmet — sağ taraf */}
+      <PlayerSeat
+        name="Mehmet"
+        tileCount={gameState.players[2].hand.length}
+        position={[1.5, 0, 0]}
+        rotation={[0, -Math.PI / 2, 0]}
+      />
+
+      {/* Geliştirme aşamasında fareyle döndürme — zoom kapalı */}
+      <OrbitControls enableZoom={false} target={[0, 0, 0.3]} />
     </Canvas>
   );
 }
