@@ -50,7 +50,7 @@ console.log('\n═════════════════════�
 console.log('  meks101 — Oyun Motoru CLI Testi');
 console.log('═══════════════════════════════════════');
 
-const state = createGame(['Ayşe', 'Mehmet', 'Ali']);
+const state = createGame(['Hatice', 'Mehmet', 'Ali']);
 
 console.log('\n▸ Gösterge taşı :', formatTile(state.indicatorTile));
 console.log('▸ Okey taşı     :', formatTile(state.okeyTile));
